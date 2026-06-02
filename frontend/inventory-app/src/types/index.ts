@@ -4,8 +4,6 @@ export interface User {
   lastName: string;
 }
 
-export type ItemType = 'Tablet' | 'Phone' | 'SimCard' | 'Laptop';
-
 export interface InventoryItem {
   id: string;
   type: string;
@@ -43,7 +41,7 @@ export interface InventoryFilter {
 }
 
 export interface ExportRequest {
-  template: 'template1' | 'template2';
+  template: string;
   type?: string;
   comment?: string;
   userId?: string;

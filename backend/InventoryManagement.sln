@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagement.API", "InventoryManagement.API\InventoryManagement.API.csproj", "{426219CB-92CF-4EA3-BB66-7BEC25E8DA76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagement.Core", "InventoryManagement.Core\InventoryManagement.Core.csproj", "{99CD25DF-2695-43CA-9F4A-CD9792140227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagement.Infrastructure", "InventoryManagement.Infrastructure\InventoryManagement.Infrastructure.csproj", "{BBE3334F-7D6E-495B-B5F9-5A26FD054922}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{426219CB-92CF-4EA3-BB66-7BEC25E8DA76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{426219CB-92CF-4EA3-BB66-7BEC25E8DA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{426219CB-92CF-4EA3-BB66-7BEC25E8DA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{426219CB-92CF-4EA3-BB66-7BEC25E8DA76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99CD25DF-2695-43CA-9F4A-CD9792140227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99CD25DF-2695-43CA-9F4A-CD9792140227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99CD25DF-2695-43CA-9F4A-CD9792140227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99CD25DF-2695-43CA-9F4A-CD9792140227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE3334F-7D6E-495B-B5F9-5A26FD054922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE3334F-7D6E-495B-B5F9-5A26FD054922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE3334F-7D6E-495B-B5F9-5A26FD054922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE3334F-7D6E-495B-B5F9-5A26FD054922}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

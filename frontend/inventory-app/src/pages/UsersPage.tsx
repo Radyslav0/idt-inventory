@@ -1,133 +1,144 @@
-import { useState, useEffect } from 'react';
-import { getUsers, createUser, deleteUser } from '../api/client';
-import type { User, CreateUserDto } from '../types';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchUsers, createUser, deleteUser } from '../api/client';
+import { QUERY_KEYS } from '../constants/app';
+import type { CreateUserDto } from '../types';
+
+const DEFAULT_FORM: CreateUserDto = { firstName: '', lastName: '' };
 
 export function UsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState<CreateUserDto>({ firstName: '', lastName: '' });
-  const [submitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState<CreateUserDto>(DEFAULT_FORM);
 
-  const load = async () => {
-    setLoading(true);
-    try { setUsers(await getUsers()); }
-    finally { setLoading(false); }
-  };
+  const { data: users = [], isLoading } = useQuery({
+    queryKey: QUERY_KEYS.users,
+    queryFn: fetchUsers,
+  });
 
-  useEffect(() => { load(); }, []);
-
-  const handleCreate = async () => {
-    if (!form.firstName.trim() || !form.lastName.trim()) return;
-    setSubmitting(true);
-    try {
-      await createUser(form);
-      setForm({ firstName: '', lastName: '' });
+  const createMutation = useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.users });
+      setForm(DEFAULT_FORM);
       setShowModal(false);
-      await load();
-    } finally { setSubmitting(false); }
-  };
+    },
+  });
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
-    await deleteUser(id);
-    await load();
+  const deleteMutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.users }),
+  });
+
+  const handleDelete = (id: string, name: string) => {
+    if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
+    deleteMutation.mutate(id);
   };
 
   return (
-      <div>
-        <div className="page-header">
-          <div>
-            <div className="page-title">Users</div>
-            <div className="page-subtitle">Manage team members</div>
+    <div>
+      <div className="page-header">
+        <div>
+          <div className="page-title">Users</div>
+          <div className="page-subtitle">Manage team members</div>
+        </div>
+        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+          + Add User
+        </button>
+      </div>
+
+      <div className="page-body">
+        <div className="stats-row">
+          <div className="stat-card">
+            <div className="stat-label">Total Users</div>
+            <div className="stat-value" style={{ color: 'var(--accent)' }}>{users.length}</div>
           </div>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Add User</button>
         </div>
 
-        <div className="page-body">
-          <div className="stats-row" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
-            <div className="stat-card">
-              <div className="stat-label">Total Users</div>
-              <div className="stat-value" style={{ color: 'var(--blue)' }}>{users.length}</div>
+        <div className="card table-wrap">
+          {isLoading ? (
+            <div style={{ padding: '48px', textAlign: 'center', color: 'var(--muted)' }}>Loading...</div>
+          ) : users.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">👥</div>
+              <p>No users yet. Add one!</p>
             </div>
-          </div>
-
-          <div className="card table-wrap">
-            {loading ? (
-                <div style={{ padding: 48, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>Loading…</div>
-            ) : users.length === 0 ? (
-                <div className="empty-state"><p>No users yet.</p></div>
-            ) : (
-                <table>
-                  <thead>
-                  <tr>
-                    <th style={{ width: 40 }}>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>ID</th>
-                    <th style={{ width: 72 }}></th>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>ID</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((u, i) => (
+                  <tr key={u.id}>
+                    <td className="text-muted text-mono">{i + 1}</td>
+                    <td style={{ fontWeight: 500 }}>{u.firstName}</td>
+                    <td>{u.lastName}</td>
+                    <td className="text-mono" style={{ fontSize: 11, color: 'var(--muted)' }}>
+                      {u.id.split('-')[0]}…
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(u.id, `${u.firstName} ${u.lastName}`)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        🗑
+                      </button>
+                    </td>
                   </tr>
-                  </thead>
-                  <tbody>
-                  {users.map((u, i) => (
-                      <tr key={u.id}>
-                        <td className="text-muted mono" style={{ fontSize: 12 }}>{i + 1}</td>
-                        <td style={{ fontWeight: 500 }}>{u.firstName}</td>
-                        <td>{u.lastName}</td>
-                        <td className="mono text-muted" style={{ fontSize: 11 }}>{u.id.split('-')[0]}</td>
-                        <td>
-                          <button
-                              className="btn btn-ghost-danger btn-sm"
-                              onClick={() => handleDelete(u.id, `${u.firstName} ${u.lastName}`)}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                  ))}
-                  </tbody>
-                </table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
+      </div>
 
-        {showModal && (
-            <div className="modal-overlay" onClick={() => setShowModal(false)}>
-              <div className="modal" onClick={e => e.stopPropagation()}>
-                <div className="modal-title">Add User</div>
-                <div className="modal-body">
-                  <div className="form-group">
-                    <label>First Name</label>
-                    <input
-                        value={form.firstName}
-                        onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
-                        placeholder="e.g. Linas"
-                        autoFocus
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Last Name</label>
-                    <input
-                        value={form.lastName}
-                        onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
-                        placeholder="e.g. Petraitis"
-                        onKeyDown={e => e.key === 'Enter' && handleCreate()}
-                    />
-                  </div>
-                </div>
-                <div className="modal-actions">
-                  <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                  <button
-                      className="btn btn-primary"
-                      onClick={handleCreate}
-                      disabled={submitting || !form.firstName.trim() || !form.lastName.trim()}
-                  >
-                    {submitting ? 'Creating…' : 'Create User'}
-                  </button>
-                </div>
+      {showModal && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">👤 Add New User</div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div className="form-group">
+                <label>First Name</label>
+                <input
+                  value={form.firstName}
+                  onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
+                  placeholder="e.g. Linas"
+                  autoFocus
+                />
+              </div>
+              <div className="form-group">
+                <label>Last Name</label>
+                <input
+                  value={form.lastName}
+                  onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
+                  placeholder="e.g. Petraitis"
+                  onKeyDown={e => e.key === 'Enter' && createMutation.mutate(form)}
+                />
               </div>
             </div>
-        )}
-      </div>
+
+            <div className="modal-actions">
+              <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => createMutation.mutate(form)}
+                disabled={createMutation.isPending || !form.firstName.trim() || !form.lastName.trim()}
+              >
+                {createMutation.isPending ? 'Creating...' : 'Create User'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
