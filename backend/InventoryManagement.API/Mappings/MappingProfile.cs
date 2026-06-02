@@ -20,10 +20,10 @@ public class MappingProfile : Profile
 
         CreateMap<CreateInventoryItemDto, InventoryItem>()
             .ForMember(dest => dest.Type,
-                opt => opt.MapFrom(src => Enum.Parse<ItemType>(src.Type, ignoreCase: true)));
+                opt => opt.MapFrom(src => Enum.Parse<ItemType>(src.Type, true)));
 
         CreateMap<UpdateInventoryItemDto, InventoryItem>()
             .ForMember(dest => dest.Type,
-                opt => opt.MapFrom(src => Enum.Parse<ItemType>(src.Type, ignoreCase: true)));
+                opt => opt.MapFrom(src => Enum.Parse<ItemType>(src.Type, true)));
     }
 }
