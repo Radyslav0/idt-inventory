@@ -43,7 +43,7 @@ export function UsersPage() {
           <div className="page-subtitle">Manage team members</div>
         </div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          + Add User
+          Add User
         </button>
       </div>
 
@@ -60,8 +60,7 @@ export function UsersPage() {
             <div style={{ padding: '48px', textAlign: 'center', color: 'var(--muted)' }}>Loading...</div>
           ) : users.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">👥</div>
-              <p>No users yet. Add one!</p>
+              <p>No users yet. Add one.</p>
             </div>
           ) : (
             <table>
@@ -81,7 +80,7 @@ export function UsersPage() {
                     <td style={{ fontWeight: 500 }}>{u.firstName}</td>
                     <td>{u.lastName}</td>
                     <td className="text-mono" style={{ fontSize: 11, color: 'var(--muted)' }}>
-                      {u.id.split('-')[0]}…
+                      {u.id.split('-')[0]}...
                     </td>
                     <td>
                       <button
@@ -89,7 +88,7 @@ export function UsersPage() {
                         onClick={() => handleDelete(u.id, `${u.firstName} ${u.lastName}`)}
                         disabled={deleteMutation.isPending}
                       >
-                        🗑
+                        Delete
                       </button>
                     </td>
                   </tr>
@@ -103,7 +102,7 @@ export function UsersPage() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <div className="modal-title">👤 Add New User</div>
+            <div className="modal-title">Add New User</div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div className="form-group">

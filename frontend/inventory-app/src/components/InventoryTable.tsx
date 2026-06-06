@@ -11,7 +11,6 @@ export function InventoryTable({ items, onEdit, onDelete }: InventoryTableProps)
   if (items.length === 0) {
     return (
       <div className="empty-state">
-        <div className="empty-icon">📦</div>
         <p>No items match your filters.</p>
       </div>
     );
@@ -42,19 +41,19 @@ export function InventoryTable({ items, onEdit, onDelete }: InventoryTableProps)
             <td>
               {item.userFullName
                 ? <span style={{ fontWeight: 500 }}>{item.userFullName}</span>
-                : <span className="text-muted">— Unassigned —</span>}
+                : <span className="text-muted">Unassigned</span>}
             </td>
             <td className="text-mono" style={{ fontSize: 12 }}>
               {new Date(item.purchaseDate).toLocaleDateString('lt-LT')}
             </td>
             <td className="text-mono" style={{ fontSize: 10, color: 'var(--muted)' }}>
-              {item.id.split('-')[0]}…
+              {item.id.split('-')[0]}...
             </td>
             <td>
               {!item.isDeleted && (
                 <div className="flex gap-2">
-                  <button className="btn btn-secondary btn-sm" onClick={() => onEdit(item)}>✏️</button>
-                  <button className="btn btn-danger btn-sm" onClick={() => onDelete(item)}>🗑</button>
+                  <button className="btn btn-secondary btn-sm" onClick={() => onEdit(item)}>Edit</button>
+                  <button className="btn btn-danger btn-sm" onClick={() => onDelete(item)}>Delete</button>
                 </div>
               )}
             </td>

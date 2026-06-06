@@ -39,7 +39,7 @@ export function ItemModal({ users, item, onSave, onClose }: ItemModalProps) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-title">{item ? '✏️ Edit Item' : '➕ Add Item'}</div>
+        <div className="modal-title">{item ? 'Edit Item' : 'Add Item'}</div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div className="form-group">
@@ -73,7 +73,7 @@ export function ItemModal({ users, item, onSave, onClose }: ItemModalProps) {
           <div className="form-group">
             <label>Assigned User (optional)</label>
             <select value={form.userId} onChange={e => setForm(f => ({ ...f, userId: e.target.value }))}>
-              <option value="">— Unassigned —</option>
+              <option value="">Unassigned</option>
               {users.map(u => (
                 <option key={u.id} value={u.id}>{u.firstName} {u.lastName}</option>
               ))}

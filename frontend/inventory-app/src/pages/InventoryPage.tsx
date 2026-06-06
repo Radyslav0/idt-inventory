@@ -47,11 +47,13 @@ export function InventoryPage() {
     onSuccess: () => invalidateInventory(),
   });
 
-  const handleCreate = (dto: CreateInventoryItemDto | UpdateInventoryItemDto) =>
-    createMutation.mutateAsync(dto as CreateInventoryItemDto);
+  const handleCreate = async (dto: CreateInventoryItemDto | UpdateInventoryItemDto) => {
+    await createMutation.mutateAsync(dto as CreateInventoryItemDto);
+  };
 
-  const handleUpdate = (dto: CreateInventoryItemDto | UpdateInventoryItemDto) =>
-    updateMutation.mutateAsync({ id: editItem!.id, dto: dto as UpdateInventoryItemDto });
+  const handleUpdate = async (dto: CreateInventoryItemDto | UpdateInventoryItemDto) => {
+    await updateMutation.mutateAsync({ id: editItem!.id, dto: dto as UpdateInventoryItemDto });
+  };
 
   const handleDelete = (item: InventoryItem) => {
     if (!confirm(`Mark "${item.comment}" as deleted?`)) return;
@@ -74,10 +76,10 @@ export function InventoryPage() {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button className="btn btn-secondary" onClick={() => setShowExportModal(true)}>
-            📄 Export PDF
+            Export PDF
           </button>
           <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
-            + Add Item
+            Add Item
           </button>
         </div>
       </div>

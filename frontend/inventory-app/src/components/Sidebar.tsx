@@ -12,13 +12,13 @@ export function Sidebar() {
           to="/users"
           className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
         >
-          <span>👥</span> Users
+          Users
         </NavLink>
         <NavLink
           to="/inventory"
           className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
         >
-          <span>📦</span> Inventory
+          Inventory
         </NavLink>
       </nav>
       <div className="sidebar-footer">Present Connection UAB</div>

@@ -8,8 +8,10 @@ interface ExportModalProps {
   onClose: () => void;
 }
 
+type PdfTemplate = typeof PDF_TEMPLATES[keyof typeof PDF_TEMPLATES];
+
 export function ExportModal({ filter, onClose }: ExportModalProps) {
-  const [template, setTemplate] = useState(PDF_TEMPLATES.template1);
+  const [template, setTemplate] = useState<PdfTemplate>(PDF_TEMPLATES.template1);
   const [exporting, setExporting] = useState(false);
 
   const handleExport = async () => {
@@ -28,15 +30,15 @@ export function ExportModal({ filter, onClose }: ExportModalProps) {
     }
   };
 
-  const templates = [
+  const templates: Array<{ value: PdfTemplate; label: string; description: string }> = [
     {
       value: PDF_TEMPLATES.template1,
-      label: '📊 Template 1 — Corporate Table',
+      label: 'Template 1 - Corporate Table',
       description: 'Landscape A4, tabular layout with dark header, alternating rows. Best for large lists.',
     },
     {
       value: PDF_TEMPLATES.template2,
-      label: '🗂️ Template 2 — Grouped Cards',
+      label: 'Template 2 - Grouped Cards',
       description: 'Portrait A4, items grouped by user with color-coded cards. Best for per-person overview.',
     },
   ];
@@ -44,7 +46,7 @@ export function ExportModal({ filter, onClose }: ExportModalProps) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-title">📄 Export to PDF</div>
+        <div className="modal-title">Export to PDF</div>
 
         <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 20 }}>
           Export includes only active items matching current filters.
@@ -82,7 +84,7 @@ export function ExportModal({ filter, onClose }: ExportModalProps) {
         <div className="modal-actions">
           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
           <button className="btn btn-primary" onClick={handleExport} disabled={exporting}>
-            {exporting ? 'Generating...' : '⬇ Download PDF'}
+            {exporting ? 'Generating...' : 'Download PDF'}
           </button>
         </div>
       </div>
